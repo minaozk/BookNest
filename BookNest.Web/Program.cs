@@ -1,3 +1,6 @@
+using BookNest.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
+
 namespace BookNest.Web
 {
 	public class Program
@@ -5,9 +8,9 @@ namespace BookNest.Web
 		public static void Main(string[] args)
 		{
 			var builder = WebApplication.CreateBuilder(args);
-
+			builder.Services.AddDbContext<ApplicationDbContext>(option => option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 			// Add services to the container.
-			builder.Services.AddControllersWithViews();
+			builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
 
 			var app = builder.Build();
 
