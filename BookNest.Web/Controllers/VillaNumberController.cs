@@ -1,146 +1,146 @@
-﻿using BookNest.Domain.Entities;
-using BookNest.Infrastructure.Data;
+﻿using BookNest.Application.Common.Interfaces;
+using BookNest.Domain.Entities;
 using BookNest.Web.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 
 namespace BookNest.Web.Controllers
 {
 
-	public class VillaNumberController : Controller
-	{
-		private readonly ApplicationDbContext _db;
-		public VillaNumberController(ApplicationDbContext db)
-		{
-			_db = db;
-		}
+    public class VillaNumberController : Controller
+    {
+        private readonly IUnitOfWork _unitOfWork;
 
-		public IActionResult Index()
-		{
-			var villaNumbers = _db.VillaNumbers.Include(u => u.Villa).ToList();
-			return View(villaNumbers);
-		}
+        public VillaNumberController(IUnitOfWork unitOfWork)
+        {
+            _unitOfWork = unitOfWork;
+        }
 
-		public IActionResult Create()
-		{
+        public IActionResult Index()
+        {
+            var villaNumbers = _unitOfWork.VillaNumber.GetAll(IncludeProperties: "Villa");
+            return View(villaNumbers);
+        }
 
-			VillaNumberVM villaNumberVM = new()
-			{
-				VillaList = _db.Villas.ToList().Select(u => new SelectListItem
-				{
-					Text = u.Name,
-					Value = u.Id.ToString()
-				})
-			};
+        public IActionResult Create()
+        {
 
-			return View(villaNumberVM);
-		}
+            VillaNumberVM villaNumberVM = new()
+            {
+                VillaList = _unitOfWork.Villa.GetAll().Select(u => new SelectListItem
+                {
+                    Text = u.Name,
+                    Value = u.Id.ToString()
+                })
+            };
 
-		[HttpPost]
-		public IActionResult Create(VillaNumberVM obj)
-		{
-			bool roomNumberExists = _db.VillaNumbers.Any(u => u.Villa_Number == obj.VillaNumber.Villa_Number);
-			if (ModelState.IsValid && !roomNumberExists)
-			{
-				_db.VillaNumbers.Add(obj.VillaNumber);
-				_db.SaveChanges();
-				TempData["success"] = "Villa numarası başarıyla oluşturuldu";
-				return RedirectToAction("Index", "VillaNumber");
-			}
+            return View(villaNumberVM);
+        }
 
-			if (roomNumberExists)
-			{
-				TempData["error"] = "Bu villa numarası sistemde kayıtlıdır.";
-			}
+        [HttpPost]
+        public IActionResult Create(VillaNumberVM obj)
+        {
+            bool roomNumberExists = _unitOfWork.VillaNumber.Any(u => u.Villa_Number == obj.VillaNumber.Villa_Number);
+            if (ModelState.IsValid && !roomNumberExists)
+            {
+                _unitOfWork.VillaNumber.Add(obj.VillaNumber);
+                _unitOfWork.Save();
+                TempData["success"] = "Villa numarası başarıyla oluşturuldu";
+                return RedirectToAction("Index", "VillaNumber");
+            }
 
-			obj.VillaList = _db.Villas.ToList().Select(u => new SelectListItem
-			{
-				Text = u.Name,
-				Value = u.Id.ToString()
-			});
+            if (roomNumberExists)
+            {
+                TempData["error"] = "Bu villa numarası sistemde kayıtlıdır.";
+            }
 
-			return View(obj);
+            obj.VillaList = _unitOfWork.Villa.GetAll().Select(u => new SelectListItem
+            {
+                Text = u.Name,
+                Value = u.Id.ToString()
+            });
 
-		}
+            return View(obj);
 
-		public IActionResult Update(int villaNumberId)
-		{
-			VillaNumberVM villaNumberVM = new()
-			{
-				VillaList = _db.Villas.ToList().Select(u => new SelectListItem
-				{
-					Text = u.Name,
-					Value = u.Id.ToString()
-				}),
-				VillaNumber = _db.VillaNumbers.FirstOrDefault(u => u.Villa_Number == villaNumberId)
-			};
-			if (villaNumberVM.VillaNumber == null)
-			{
-				return RedirectToAction("Error", "Home");
-			}
+        }
 
-			return View(villaNumberVM);
-		}
+        public IActionResult Update(int villaNumberId)
+        {
+            VillaNumberVM villaNumberVM = new()
+            {
+                VillaList = _unitOfWork.Villa.GetAll().Select(u => new SelectListItem
+                {
+                    Text = u.Name,
+                    Value = u.Id.ToString()
+                }),
+                VillaNumber = _unitOfWork.VillaNumber.Get(u => u.Villa_Number == villaNumberId)
+            };
+            if (villaNumberVM.VillaNumber == null)
+            {
+                return RedirectToAction("Error", "Home");
+            }
 
-		[HttpPost]
-		public IActionResult Update(VillaNumberVM villaNumberVM)
-		{
+            return View(villaNumberVM);
+        }
 
-			if (ModelState.IsValid)
-			{
-				_db.VillaNumbers.Update(villaNumberVM.VillaNumber);
-				_db.SaveChanges();
-				TempData["success"] = "Villa numarası başarıyla güncellendi.";
-				return RedirectToAction("Index", "VillaNumber");
-			}
+        [HttpPost]
+        public IActionResult Update(VillaNumberVM villaNumberVM)
+        {
+
+            if (ModelState.IsValid)
+            {
+                _unitOfWork.VillaNumber.Update(villaNumberVM.VillaNumber);
+                _unitOfWork.Save();
+                TempData["success"] = "Villa numarası başarıyla güncellendi.";
+                return RedirectToAction("Index", "VillaNumber");
+            }
 
 
 
-			villaNumberVM.VillaList = _db.Villas.ToList().Select(u => new SelectListItem
-			{
-				Text = u.Name,
-				Value = u.Id.ToString()
-			});
+            villaNumberVM.VillaList = _unitOfWork.Villa.GetAll().Select(u => new SelectListItem
+            {
+                Text = u.Name,
+                Value = u.Id.ToString()
+            });
 
-			return View(villaNumberVM);
-		}
+            return View(villaNumberVM);
+        }
 
-		public IActionResult Delete(int villaNumberId)
-		{
-			VillaNumberVM villaNumberVM = new()
-			{
-				VillaList = _db.Villas.ToList().Select(u => new SelectListItem
-				{
-					Text = u.Name,
-					Value = u.Id.ToString()
-				}),
-				VillaNumber = _db.VillaNumbers.FirstOrDefault(u => u.Villa_Number == villaNumberId)
-			};
-			if (villaNumberVM.VillaNumber == null)
-			{
-				return RedirectToAction("Error", "Home");
-			}
+        public IActionResult Delete(int villaNumberId)
+        {
+            VillaNumberVM villaNumberVM = new()
+            {
+                VillaList = _unitOfWork.Villa.GetAll().Select(u => new SelectListItem
+                {
+                    Text = u.Name,
+                    Value = u.Id.ToString()
+                }),
+                VillaNumber = _unitOfWork.VillaNumber.Get(u => u.Villa_Number == villaNumberId)
+            };
+            if (villaNumberVM.VillaNumber == null)
+            {
+                return RedirectToAction("Error", "Home");
+            }
 
-			return View(villaNumberVM);
-		}
+            return View(villaNumberVM);
+        }
 
-		[HttpPost]
-		public IActionResult Delete(VillaNumberVM villaNumberVM)
-		{
-			VillaNumber? objFromDb = _db.VillaNumbers.FirstOrDefault(u => u.Villa_Number == villaNumberVM.VillaNumber.Villa_Number);
+        [HttpPost]
+        public IActionResult Delete(VillaNumberVM villaNumberVM)
+        {
+            VillaNumber? objFromDb = _unitOfWork.VillaNumber.Get(u => u.Villa_Number == villaNumberVM.VillaNumber.Villa_Number);
 
-			if (villaNumberVM is not null)
-			{
-				_db.VillaNumbers.Remove(objFromDb);
-				_db.SaveChanges();
-				TempData["success"] = "Villa numarası başarıyla silindi.";
-				return RedirectToAction("Index", "VillaNumber");
-			}
+            if (villaNumberVM is not null)
+            {
+                _unitOfWork.VillaNumber.Remove(objFromDb);
+                _unitOfWork.Save();
+                TempData["success"] = "Villa numarası başarıyla silindi.";
+                return RedirectToAction("Index", "VillaNumber");
+            }
 
-			TempData["error"] = "Villa numarası silinemedi";
+            TempData["error"] = "Villa numarası silinemedi";
 
-			return View(villaNumberVM);
-		}
-	}
+            return View(villaNumberVM);
+        }
+    }
 }
