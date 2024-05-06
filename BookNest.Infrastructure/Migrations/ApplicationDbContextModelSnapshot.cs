@@ -22,6 +22,99 @@ namespace BookNest.Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("BookNest.Domain.Entities.Amenity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("VillaId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("VillaId");
+
+                    b.ToTable("Amenities");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Özel Havuz",
+                            VillaId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Mikrodalga",
+                            VillaId = 1
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Özel Balkon",
+                            VillaId = 1
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "1 çift kişilik yatak ve 1 tek kişilik yatak",
+                            VillaId = 1
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "Özel Dalma Havuzu\r\n",
+                            VillaId = 2
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Name = "Mikrodalga ve Mini Buzdolabı",
+                            VillaId = 2
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Name = "Özel Balkon",
+                            VillaId = 2
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Name = "Kral yatak veya 2 adet çift kişilik yatak",
+                            VillaId = 2
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Name = "Özel Havuz",
+                            VillaId = 3
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Name = "Jakuzi",
+                            VillaId = 3
+                        },
+                        new
+                        {
+                            Id = 11,
+                            Name = "Özel Balkon",
+                            VillaId = 3
+                        });
+                });
+
             modelBuilder.Entity("BookNest.Domain.Entities.Villa", b =>
                 {
                     b.Property<int>("Id")
@@ -131,6 +224,17 @@ namespace BookNest.Infrastructure.Migrations
                             Villa_Number = 302,
                             VillaId = 3
                         });
+                });
+
+            modelBuilder.Entity("BookNest.Domain.Entities.Amenity", b =>
+                {
+                    b.HasOne("BookNest.Domain.Entities.Villa", "Villa")
+                        .WithMany()
+                        .HasForeignKey("VillaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Villa");
                 });
 
             modelBuilder.Entity("BookNest.Domain.Entities.VillaNumber", b =>

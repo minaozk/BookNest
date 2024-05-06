@@ -12,6 +12,7 @@ namespace BookNest.Infrastructure.Data
 
 		public DbSet<Villa> Villas { get; set; }
 		public DbSet<VillaNumber> VillaNumbers { get; set; }
+		public DbSet<Amenity> Amenities { get; set; }
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
@@ -78,6 +79,68 @@ namespace BookNest.Infrastructure.Data
 				}
 
 				);
+
+			modelBuilder.Entity<Amenity>().HasData(
+		  new Amenity
+		  {
+			  Id = 1,
+			  VillaId = 1,
+			  Name = "Özel Havuz"
+		  }, new Amenity
+		  {
+			  Id = 2,
+			  VillaId = 1,
+			  Name = "Mikrodalga"
+		  }, new Amenity
+		  {
+			  Id = 3,
+			  VillaId = 1,
+			  Name = "Özel Balkon"
+		  }, new Amenity
+		  {
+			  Id = 4,
+			  VillaId = 1,
+			  Name = "1 çift kişilik yatak ve 1 tek kişilik yatak"
+		  },
+
+		  new Amenity
+		  {
+			  Id = 5,
+			  VillaId = 2,
+			  Name = "Özel Dalma Havuzu\r\n"
+		  }, new Amenity
+		  {
+			  Id = 6,
+			  VillaId = 2,
+			  Name = "Mikrodalga ve Mini Buzdolabı"
+		  }, new Amenity
+		  {
+			  Id = 7,
+			  VillaId = 2,
+			  Name = "Özel Balkon"
+		  }, new Amenity
+		  {
+			  Id = 8,
+			  VillaId = 2,
+			  Name = "Kral yatak veya 2 adet çift kişilik yatak"
+		  },
+
+		  new Amenity
+		  {
+			  Id = 9,
+			  VillaId = 3,
+			  Name = "Özel Havuz"
+		  }, new Amenity
+		  {
+			  Id = 10,
+			  VillaId = 3,
+			  Name = "Jakuzi"
+		  }, new Amenity
+		  {
+			  Id = 11,
+			  VillaId = 3,
+			  Name = "Özel Balkon"
+		  });
 		}
 	}
 }
