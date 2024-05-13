@@ -1,10 +1,11 @@
 ﻿using BookNest.Application.Common.Interfaces;
 using BookNest.Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookNest.Web.Controllers
 {
-
+	[Authorize]
 	public class VillaController : Controller
 	{
 		private readonly IUnitOfWork _unitOfWork;

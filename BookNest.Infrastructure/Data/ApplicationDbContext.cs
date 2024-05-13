@@ -1,22 +1,28 @@
 ﻿using BookNest.Domain.Entities;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace BookNest.Infrastructure.Data
 {
-	public class ApplicationDbContext : DbContext
+	public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 	{
 		public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
 		{
-
 		}
-
 		public DbSet<Villa> Villas { get; set; }
 		public DbSet<VillaNumber> VillaNumbers { get; set; }
 		public DbSet<Amenity> Amenities { get; set; }
+		public DbSet<ApplicationUser> ApplicationUsers { get; set; }
+		public DbSet<Booking> Bookings { get; set; }
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
-			//base.OnModelCreating(modelBuilder);
+			base.OnModelCreating(modelBuilder);
+
+			modelBuilder.Entity<ApplicationUser>(builder =>
+			{
+				builder.ToTable("ApplicationUser");
+			});
 
 			modelBuilder.Entity<Villa>().HasData(
 				new Villa

@@ -1,12 +1,14 @@
 ﻿using BookNest.Application.Common.Interfaces;
+using BookNest.Application.Common.Utility;
 using BookNest.Domain.Entities;
 using BookNest.Web.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace BookNest.Web.Controllers
 {
-
+	[Authorize(Roles = SD.Role_Admin)]
 	public class AmenityController : Controller
 	{
 		private readonly IUnitOfWork _unitOfWork;
