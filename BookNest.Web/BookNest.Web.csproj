@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <Content Remove="Views\Shared\_Notification.cshtml" />
+    <Content Remove="Views\Shared\_VillaDetail.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -36,14 +37,20 @@
 
   <ItemGroup>
     <_ContentIncludedByDefault Remove="Views\Shared\_Notification.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Shared\_VillaDetail.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="Views\Shared\_Notification.cshtml" />
+    <None Include="Views\Shared\_VillaDetail.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="wwwroot\images\VillaImage\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Views\Shared\_VillaDetail.cshtml" />
   </ItemGroup>
 
 </Project>

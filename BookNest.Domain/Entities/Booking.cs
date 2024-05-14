@@ -7,6 +7,7 @@ namespace BookNest.Domain.Entities
 	{
 		[Key]
 		public int Id { get; set; }
+
 		[Required]
 		public string UserId { get; set; }
 		[ForeignKey("UserId")]
@@ -16,15 +17,18 @@ namespace BookNest.Domain.Entities
 		public int VillaId { get; set; }
 		[ForeignKey("VillaId")]
 		public Villa Villa { get; set; }
+
 		[Required]
 		public string Name { get; set; }
 		[Required]
 		public string Email { get; set; }
 		public string? Phone { get; set; }
+
 		[Required]
 		public double TotalCost { get; set; }
 		public int Nights { get; set; }
 		public string? Status { get; set; }
+
 		[Required]
 		public DateTime BookingDate { get; set; }
 		[Required]
@@ -42,5 +46,9 @@ namespace BookNest.Domain.Entities
 		public DateTime ActualCheckOutDate { get; set; }
 
 		public int VillaNumber { get; set; }
+
+		[NotMapped]
+		public List<VillaNumber> VillaNumbers { get; set; }
+
 	}
 }
