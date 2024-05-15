@@ -16,10 +16,12 @@ namespace BookNest.Web.Controllers
 			_unitOfWork = unitOfWork;
 		}
 
+		[Authorize]
 		public IActionResult Index()
 		{
 			return View();
 		}
+
 
 		[Authorize]
 		public IActionResult FinalizeBooking(int villaId, DateOnly checkInDate, int nights)
@@ -73,6 +75,13 @@ namespace BookNest.Web.Controllers
 			return View(bookingId);
 		}
 
+
+		[Authorize]
+		public IActionResult BookingDetail(int bookingId)
+		{
+			Booking bookingFromDb = _unitOfWork.Booking.Get(u => u.Id == bookingId, IncludeProperties: "User,Villa");
+			return View(bookingFromDb);
+		}
 		#region API Calls
 		[HttpGet]
 		[Authorize]
