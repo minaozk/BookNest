@@ -1,4 +1,5 @@
 using BookNest.Application.Common.Interfaces;
+using BookNest.Application.Common.Utility;
 using BookNest.Web.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
@@ -28,12 +29,13 @@ namespace BookNest.Web.Controllers
 		public IActionResult GetVillasByDate(int nights, DateOnly checkInDate)
 		{
 			var villaList = _unitOfWork.Villa.GetAll(IncludeProperties: "VillaAmenity").ToList();
+			var villaNumberList = _unitOfWork.VillaNumber.GetAll().ToList();
+			var bookedVillas = _unitOfWork.Booking.GetAll(u => u.Status == SD.StatusApproved || u.Status == SD.StatusCheckIn).ToList();
+
 			foreach (var villa in villaList)
 			{
-				if (villa.Id % 2 == 0)
-				{
-					villa.isAvailable = false;
-				}
+				int roomsAvailable = SD.VillaRoomsAvailable_Count(villa.Id, villaNumberList, checkInDate, nights, bookedVillas);
+				villa.isAvailable = roomsAvailable > 0 ? true : false;
 			}
 			HomeVM homeVM = new HomeVM()
 			{

@@ -43,6 +43,12 @@
   <ItemGroup>
     <None Include="Views\Shared\_Notification.cshtml" />
     <None Include="Views\Shared\_VillaDetail.cshtml" />
+    <None Include="wwwroot\js\dashboard\getCustomerAndBookingLineChart.js" />
+    <None Include="wwwroot\js\dashboard\getCustomerBookingPieChart.js" />
+    <None Include="wwwroot\js\dashboard\getTotalBookingsRadial.js" />
+    <None Include="wwwroot\js\dashboard\getTotalRevenueRadial.js" />
+    <None Include="wwwroot\js\dashboard\getTotalUserRadial.js" />
+    <None Include="wwwroot\js\dashboard\radailChart.js" />
   </ItemGroup>
 
   <ItemGroup>

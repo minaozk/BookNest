@@ -50,5 +50,6 @@ namespace BookNest.Domain.Entities
 		[NotMapped]
 		public List<VillaNumber> VillaNumbers { get; set; }
 
+
 	}
 }

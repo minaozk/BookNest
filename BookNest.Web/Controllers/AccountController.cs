@@ -1,5 +1,4 @@
-﻿using BookNest.Application.Common.Interfaces;
-using BookNest.Application.Common.Utility;
+﻿using BookNest.Application.Common.Utility;
 using BookNest.Domain.Entities;
 using BookNest.Web.ViewModels;
 using Microsoft.AspNetCore.Identity;
@@ -10,14 +9,14 @@ namespace BookNest.Web.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly IUnitOfWork _unitOfWork;
+
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly RoleManager<IdentityRole> _roleManager;
-        public AccountController(UserManager<ApplicationUser> userManager, IUnitOfWork unitOfWork, SignInManager<ApplicationUser> signInManager, RoleManager<IdentityRole> roleManager)
+        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, RoleManager<IdentityRole> roleManager)
         {
             _userManager = userManager;
-            _unitOfWork = unitOfWork;
+
             _signInManager = signInManager;
             _roleManager = roleManager;
         }
@@ -118,16 +117,24 @@ namespace BookNest.Web.Controllers
 
                 if (result.Succeeded)
                 {
-
-
-                    if (string.IsNullOrEmpty(loginVM.RedirectUrl))
+                    var user = await _userManager.FindByEmailAsync(loginVM.Email);
+                    if (await _userManager.IsInRoleAsync(user, SD.Role_Admin))
                     {
-                        return RedirectToAction("Index", "Home");
+                        return RedirectToAction("Index", "Dashboard");
                     }
                     else
                     {
-                        return LocalRedirect(loginVM.RedirectUrl);
+                        if (string.IsNullOrEmpty(loginVM.RedirectUrl))
+                        {
+                            return RedirectToAction("Index", "Home");
+                        }
+                        else
+                        {
+                            return LocalRedirect(loginVM.RedirectUrl);
+                        }
                     }
+
+
 
                 }
                 else
